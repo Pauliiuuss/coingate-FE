@@ -1,4 +1,4 @@
 
-export const fiatCurrencies: string[] = ['usd', 'eur']
+export const fiatCurrencies: string[] = ['EUR', 'USDT']
 
-export const cryptoCurrencies: string[] = ['btc', 'eth', 'usdt']
+export const cryptoCurrencies: string[] = ['BTC', 'ETH', 'ADA']

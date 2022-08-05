@@ -1,11 +1,17 @@
-import { AxiosPromise } from "axios"
+import { AxiosResponse } from "axios"
 
 export interface CurrencyService {
-    fetchBinanceCurrencyRates(params: CurrencyRatesRequest): Promise<AxiosPromise<any>>
-    fetchCoingateCurrencyRates(params: CurrencyRatesRequest): Promise<AxiosPromise<any>>
+    fetchBinanceCurrencyRates(params: CurrencyRatesRequest): Promise<AxiosResponse<any, any>>
+    fetchCoingateCurrencyRates(params: CurrencyRatesRequest): Promise<AxiosResponse<any, any>>
 }
 
 export interface CurrencyRatesRequest {
-    fiat: string
-    crypto: string
+    currency1?: string
+    currency2?: string
+}
+
+export interface BinanceRatesResponse {
+    calcTime: number,
+    price: number,
+    symbol: string
 }
