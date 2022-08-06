@@ -1,7 +1,7 @@
-import {FC} from 'react'
-import { MenuItem, Select, TextField } from "@mui/material"
+import { FC } from 'react'
+import { MenuItem, Select } from "@mui/material"
 
-export interface CurrencySelectorProps {
+interface CurrencySelectorProps {
     menuItems: string[]
     onSelectChange: (currency: string) => void
 }
