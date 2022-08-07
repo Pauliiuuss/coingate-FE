@@ -1,6 +1,7 @@
 import { TextField } from "@mui/material"
 import { FC } from "react"
 import { observer } from 'mobx-react'
+import { useFormik } from "formik"
 
 interface InputFieldProps {
     onInput?: (inputAmount: string) => void
@@ -12,10 +13,15 @@ const InputField: FC<InputFieldProps> = observer(props => {
     const { input, onInput, calculatedAmount } = props
 
     const onChange = (inputAmount: any) => {
-        if(input) {
-            onInput!(inputAmount)
-        }
+        onInput!(inputAmount)
     }
+
+    // const formik = useFormik({
+    //     initialValues: {
+    //         calculatedAmount: calculatedAmount
+    //     },
+    //     onSubmit: () => {},
+    // });
 
     return (
         <>

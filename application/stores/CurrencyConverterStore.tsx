@@ -1,47 +1,42 @@
-import { observable, action, toJS, computed } from 'mobx'
-import { CurrencyService } from '../utils/Types'
+import { observable, action, computed } from 'mobx'
+import { CurrencyService, CurrencyRatesRequest } from '../utils/Types'
 import { currencyService } from '../services/CurrencyService'
 import { calculateAmounts } from '../utils/calculateAmounts.utils'
 
 export class CurrencyConverterStoreImpl {
-    @observable binanceCurrencyRatesLoading: boolean = false
-    @observable coingateCurrencyRatesLoading: boolean = false
-    @observable ratesInitialized: boolean = false
-    @observable binanceCurrencyRate: number | undefined
-    @observable coingateCurrencyRate: number | undefined
-    @observable calculatedAmount: number | undefined
+    @observable binanceCurrencyRate: number = 0
+    @observable coingateCurrencyRate: number = 0
+    @observable lastRequestParams: CurrencyRatesRequest = {}
 
     service: CurrencyService = currencyService
 
     fetchCurrencyRates = async (fiat: string, crypto: string) => {
-        this.binanceCurrencyRatesLoading = true
-        this.coingateCurrencyRatesLoading = true
+        this.setLastRequestParams(crypto, fiat)
 
-        try {
-            const binanceResult = await this.service.fetchBinanceCurrencyRates({
-                currency1: crypto,
-                currency2: fiat
-            })
-             
-            const coingateResult = await this.service.fetchCoingateCurrencyRates({
-                currency1: crypto,
-                currency2: fiat
-            })
-
+            const binanceResult = await this.service.fetchBinanceCurrencyRates(this.lastRequestParams)
+            
+            const coingateResult = await this.service.fetchCoingateCurrencyRates(this.lastRequestParams)
+    
             this.handleBinanceResult(binanceResult)
             this.handleCoingateResult(coingateResult)
-
-            this.ratesInitialized = true
-
-        } finally {
-            this.binanceCurrencyRatesLoading = false
-            this.coingateCurrencyRatesLoading = false
-        }
     }
 
-    refetchCurrencyRates = async (fiat: string, crypto: string, input: string) => {
-        await this.fetchCurrencyRates(fiat, crypto)
-        await this.calculateAllAmounts(input)
+    refetchFiatRates = async (fiat: string, input: string) => {
+            await this.fetchCurrencyRates(fiat, this.lastRequestParams.currency1!)
+            this.calculateAllAmounts(input)
+    }
+
+    refetchCryptoRates = async (crypto: string, input: string) => {
+            await this.fetchCurrencyRates(this.lastRequestParams.currency2!, crypto)
+            this.calculateAllAmounts(input)
+    }
+
+    @action setLastRequestParams = (currency1: string, currency2: string) => {
+        this.lastRequestParams = {
+            ...this.lastRequestParams,
+            currency1,
+            currency2
+        }
     }
 
     @action handleBinanceResult = (result: any) => {
@@ -52,49 +47,44 @@ export class CurrencyConverterStoreImpl {
         this.coingateCurrencyRate = result.data
     }
 
-    @computed get isRatesInitialized(): boolean {
-        return this.ratesInitialized
+    @computed get binanceRates(): number {
+        return this.binanceCurrencyRate
     }
 
-    @observable finalBinanceCalculated: string = '0'
-    @observable finalCoingateCalculated: string = '0'
-    @observable amountsCalculated: boolean = false
+    @computed get coingateRates(): number {
+        return this.coingateCurrencyRate
+    }
+
+    @observable finalBinanceCalculated: string = ''
+    @observable finalCoingateCalculated: string = ''
 
     calculateAllAmounts = (input: string) => {
-            this.calculateBinanceAmounts(input)
-            this.calculateCoingateAmounts(input)
+        const binanceResult = calculateAmounts(input, this.binanceRates)
+        const coingateResult = calculateAmounts(input, this.coingateCurrencyRate)
 
-            this.amountsCalculated = true
+        this.handleBinanceCalculatedResult(binanceResult)
+        this.handleCoingateCalculatedResult(coingateResult)
     }
 
-    @action calculateBinanceAmounts = (input: string) => {
-            const result = calculateAmounts(input, this.binanceCurrencyRate!)
-            this.handleBinanceCalculatedResult(result)
-    }
 
-    @action calculateCoingateAmounts = (input: string) => {
-            const result = calculateAmounts(input, this.coingateCurrencyRate!)
-            this.handleCoingateCalculatedResult(result)
-    }
-
+    
     @action handleBinanceCalculatedResult = (result: string) => {
         this.finalBinanceCalculated = result
     }
 
     @action handleCoingateCalculatedResult = (result: string) => {
+        console.log(result)
         this.finalCoingateCalculated = result
+        console.log(this.finalCoingateCalculated)
     }
 
     @computed get finalBinanceCalculations(): string {
-        return this.finalBinanceCalculated!
+        return this.finalBinanceCalculated
     }
 
     @computed get finalCoingateCalculations(): string {
-        return this.finalCoingateCalculated!
-    }
-
-    @computed get isAmountsCalculated(): boolean {
-        return this.amountsCalculated
+        console.log(this.finalCoingateCalculated + 'finalcalc')
+        return this.finalCoingateCalculated
     }
 
 }
