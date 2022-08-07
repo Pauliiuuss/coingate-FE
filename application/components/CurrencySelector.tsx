@@ -1,12 +1,13 @@
-import {FC} from 'react'
-import { MenuItem, Select, TextField } from "@mui/material"
+import { FC } from 'react'
+import { MenuItem, Select } from "@mui/material"
+import { observer } from 'mobx-react'
 
-export interface CurrencySelectorProps {
+interface CurrencySelectorProps {
     menuItems: string[]
     onSelectChange: (currency: string) => void
 }
 
-const CurrencySelector: FC<CurrencySelectorProps> = props => {
+const CurrencySelector: FC<CurrencySelectorProps> = observer(props => {
     const { menuItems, onSelectChange } = props
 
     const onSelect = (currency: any) => {
@@ -31,6 +32,6 @@ const CurrencySelector: FC<CurrencySelectorProps> = props => {
             </Select>
         </>
     )
-}
+})
 
 export default CurrencySelector

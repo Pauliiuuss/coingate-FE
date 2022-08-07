@@ -1,59 +1,74 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { observer } from 'mobx-react'
-import { Grid, MenuItem, Select, TextField } from '@mui/material'
+import { Grid, TextField } from '@mui/material'
 import type { NextPage } from 'next'
-import InputField from '../application/components/CurrencySelector'
+import CurrencySelector from '../application/components/CurrencySelector'
 import { fiatCurrencies, cryptoCurrencies } from '../application/utils/CurrencyTypes'
 import { currencyConverterStore } from '../application/stores/CurrencyConverterStore'
+import InputField from '../application/components/InputField'
 import { useFormik } from 'formik'
 
 const CurrencyConverter: NextPage = observer(() => {
   const [crypto, setCrypto] = useState('BTC')
   const [fiat, setFiat] = useState('EUR')
-  const [init, setInit] = useState(false)
+  const [input, setInput] = useState('')
 
   const {
     fetchCurrencyRates,
-    ratesInitialized
+    calculateAllAmounts,
+    finalBinanceCalculations,
+    finalCoingateCalculations,
+    refetchFiatRates,
+    refetchCryptoRates,
+    coingateCurrencyRate,
+    binanceCurrencyRate,
+    finalCoingateCalculated,
   } = currencyConverterStore
 
   useEffect(() => {
       fetchCurrencyRates(fiat, crypto)
-      setInit(true)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onFiatSelect = (fiat: string) => {
-    setFiat(fiat.toUpperCase())
+    refetchFiatRates(fiat, input)
+    setFiat(fiat)
   }
 
   const onCryptoSelect = (crypto: string) => {
-    setCrypto(crypto.toUpperCase())
+    refetchCryptoRates(crypto, input)
+    setCrypto(crypto)
   }
 
-  useEffect(() => {
-    if(ratesInitialized) {
-      fetchCurrencyRates(fiat, crypto)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fiat, crypto])
+  const onInput = (input: string) => {
+    calculateAllAmounts(input)
+    setInput(input)
+  }
 
+  // const formik = useFormik({
+  //   initialValues: {
+  //       calculatedAmount: ''
+  //   },
+  //   onSubmit: () => {formik.initialValues.calculatedAmount = finalCoingateCalculations},
+  // });
 
   return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="center"
-      alignItems="center"
-      spacing={2}
-      columns={{xs: 4, sm: 8, md: 12}}
-    >
-      <Grid item>
-        <InputField menuItems={fiatCurrencies} onSelectChange={onFiatSelect}/>
-      </Grid>
-      <Grid item>
-        <InputField menuItems={cryptoCurrencies} onSelectChange={onCryptoSelect}/>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+        columns={{xs: 4, sm: 8, md: 12}}
+      >
+        <Grid item>
+          <InputField onInput={onInput} input={true}/>
+          <CurrencySelector menuItems={fiatCurrencies} onSelectChange={onFiatSelect}/>
+        </Grid>
+        <Grid item>
+          <TextField value={finalCoingateCalculations} disabled/>
+          <CurrencySelector menuItems={cryptoCurrencies} onSelectChange={onCryptoSelect}/>
       </Grid>
     </Grid>
   )
