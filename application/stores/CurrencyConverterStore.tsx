@@ -21,12 +21,12 @@ export class CurrencyConverterStoreImpl {
             this.handleCoingateResult(coingateResult)
     }
 
-    refetchFiatRates = async (fiat: string, input: string) => {
+    refetchOnFiatChange = async (fiat: string, input: string) => {
             await this.fetchCurrencyRates(fiat, this.lastRequestParams.currency1!)
             this.calculateAllAmounts(input)
     }
 
-    refetchCryptoRates = async (crypto: string, input: string) => {
+    refetchOnCryptoChanges = async (crypto: string, input: string) => {
             await this.fetchCurrencyRates(this.lastRequestParams.currency2!, crypto)
             this.calculateAllAmounts(input)
     }
@@ -40,7 +40,7 @@ export class CurrencyConverterStoreImpl {
     }
 
     @action handleBinanceResult = (result: any) => {
-        this.binanceCurrencyRate = result.price
+        this.binanceCurrencyRate = result.data.price
     }
 
     @action handleCoingateResult = (result: any) => {
@@ -73,9 +73,7 @@ export class CurrencyConverterStoreImpl {
     }
 
     @action handleCoingateCalculatedResult = (result: string) => {
-        console.log(result)
         this.finalCoingateCalculated = result
-        console.log(this.finalCoingateCalculated)
     }
 
     @computed get finalBinanceCalculations(): string {
@@ -83,7 +81,6 @@ export class CurrencyConverterStoreImpl {
     }
 
     @computed get finalCoingateCalculations(): string {
-        console.log(this.finalCoingateCalculated + 'finalcalc')
         return this.finalCoingateCalculated
     }
 

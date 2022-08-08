@@ -1,0 +1,58 @@
+.barHigher {
+    background-color: darkorange;
+    max-width: 12rem;
+    width: 100%;
+    height: 2rem;
+    display: flex;
+    justify-content:flex-end;
+    align-items: center;
+}
+
+.barLower {
+    background-color: darkorange;
+    max-width: 11rem;
+    width: 100%;
+    height: 2rem;
+    display: flex;
+    justify-content:flex-end;
+    align-items: center;
+}
+
+.barEqual {
+    background-color: darkorange;
+    max-width: 2rem;
+    width: 100%;
+    display: flex;
+    justify-content:flex-end;
+    align-items: center;
+}
+
+.barNotCalculated {
+    background-color: darkorange;
+    max-width: 1rem;
+    width: 100%;
+    height: 2rem;
+    display: flex;
+    justify-content:flex-end;
+    align-items: center;
+}
+
+.coingateText {
+    padding-left: .75rem;
+}
+
+.binanceText {
+    padding-left: .75rem;
+}
+
+.coingateBar{
+    display: flex;
+    align-items: center;
+    width: 35%
+}
+
+.binanceBar{
+    display:flex;
+    align-items: center;
+    width: 35%
+}
