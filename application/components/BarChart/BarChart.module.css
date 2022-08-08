@@ -1,6 +1,6 @@
 .barHigher {
     background-color: darkorange;
-    max-width: 12rem;
+    max-width: 15rem;
     width: 100%;
     height: 2rem;
     display: flex;
@@ -10,7 +10,7 @@
 
 .barLower {
     background-color: darkorange;
-    max-width: 11rem;
+    max-width: 14rem;
     width: 100%;
     height: 2rem;
     display: flex;
@@ -20,7 +20,7 @@
 
 .barEqual {
     background-color: darkorange;
-    max-width: 2rem;
+    max-width: 10rem;
     width: 100%;
     display: flex;
     justify-content:flex-end;
@@ -48,11 +48,11 @@
 .coingateBar{
     display: flex;
     align-items: center;
-    width: 35%
+    width: 30%
 }
 
 .binanceBar{
     display:flex;
     align-items: center;
-    width: 35%
+    width: 30%
 }
