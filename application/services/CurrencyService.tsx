@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CurrencyRatesRequest, BinanceRatesResponse } from "../utils/Types";
+import { CurrencyRatesRequest } from "../utils/Types";
 
 class CurrencyService {
 
@@ -12,13 +12,7 @@ class CurrencyService {
 
     fetchCoingateCurrencyRates(request: CurrencyRatesRequest) {
         
-        const result = axios.get(`https://api.coingate.com/v2/rates/merchant/${request.currency1}/${request.currency2}`, {
-            headers: {
-                // 'access-control-allow-methods': 'GET, HEAD, OPTIONS',
-                // 'access-control-allow-origin': '*',
-                // 'cache-control': 'no-cache, no-store, must-revalidate'
-            }
-        })
+        const result = axios.get(`https://api.coingate.com/v2/rates/merchant/${request.currency1}/${request.currency2}`)
         return result
     }
 }

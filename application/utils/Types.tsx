@@ -9,9 +9,3 @@ export interface CurrencyRatesRequest {
     currency1?: string
     currency2?: string
 }
-
-export interface BinanceRatesResponse {
-    calcTime: number,
-    price: number,
-    symbol: string
-}
